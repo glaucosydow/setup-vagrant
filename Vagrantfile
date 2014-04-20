@@ -2,9 +2,9 @@
 # vi: set ft=ruby :
 
 
-############################################################
+################################################################################
 # General Configuration
-############################################################
+################################################################################
 
 # Config Github Settings
 github_username = "vitorbritto"
@@ -30,9 +30,9 @@ mysql_version         = "5.5"    # Options: 5.5 | 5.6
 mysql_enable_remote   = "false"  # remote access enabled when true
 
 
-############################################################
+################################################################################
 # Languages and Packages
-############################################################
+################################################################################
 
 # Ruby Options
 ruby_version          = "latest"   # Choose what ruby version should be installed (will also be the default version)
@@ -134,23 +134,10 @@ Vagrant.configure("2") do |config|
 
     end
 
-    # If using Vagrant-Cachier
-    # http://fgrehm.viewdocs.io/vagrant-cachier
-    if Vagrant.has_plugin?("vagrant-cachier")
-        # Configure cached packages to be shared between instances of the same base box.
-        # Usage docs: http://fgrehm.viewdocs.io/vagrant-cachier/usage
-        config.cache.scope = :box
 
-        config.cache.synced_folder_opts = {
-            type: :nfs,
-            mount_options: ['rw', 'vers=3', 'tcp', 'nolock']
-        }
-    end
-
-
-    ############################################################
+    ################################################################################
     # Base Items
-    ############################################################
+    ################################################################################
 
     # Provision Base Packages
     config.vm.provision "shell", path: "https://raw.github.com/#{github_username}/#{github_repo}/#{github_branch}/scripts/base.sh"
@@ -159,17 +146,17 @@ Vagrant.configure("2") do |config|
     config.vm.provision "shell", path: "https://raw.github.com/#{github_username}/#{github_repo}/#{github_branch}/scripts/php.sh", args: [php_version, server_timezone]
 
 
-    ############################################################
+    ################################################################################
     # Web Servers
-    ############################################################
+    ################################################################################
 
     # Provision Apache Base
     config.vm.provision "shell", path: "https://raw.github.com/#{github_username}/#{github_repo}/#{github_branch}/scripts/apache.sh", args: [server_ip, public_folder]
 
 
-    ############################################################
+    ################################################################################
     # Databases
-    ############################################################
+    ################################################################################
 
     # Provision MySQL
     config.vm.provision "shell", path: "https://raw.github.com/#{github_username}/#{github_repo}/#{github_branch}/scripts/mysql.sh", args: [mysql_root_password, mysql_version, mysql_enable_remote]
@@ -178,17 +165,17 @@ Vagrant.configure("2") do |config|
     config.vm.provision "shell", path: "https://raw.github.com/#{github_username}/#{github_repo}/#{github_branch}/scripts/mongodb.sh"
 
 
-    ############################################################
+    ################################################################################
     # Utility
-    ############################################################
+    ################################################################################
 
     # Install Heroku Toolbelt
     config.vm.provision "shell", path: "https://toolbelt.heroku.com/install-ubuntu.sh"
 
 
-    ############################################################
+    ################################################################################
     # Tooling
-    ############################################################
+    ################################################################################
 
     # Install Nodejs and Packages
     config.vm.provision "shell", path: "https://raw.github.com/#{github_username}/#{github_repo}/#{github_branch}/scripts/nodejs.sh", privileged: false, args: nodejs_packages.unshift(nodejs_version)
@@ -203,15 +190,87 @@ Vagrant.configure("2") do |config|
     config.vm.provision "shell", path: "https://raw.github.com/#{github_username}/#{github_repo}/#{github_branch}/scripts/git-ftp.sh", privileged: false
 
 
-    ############################################################
-    # Editors Setup
-    ############################################################
+    ################################################################################
+    # Editors Config
+    ################################################################################
 
     # Provision Vim
     config.vm.provision "shell", path: "https://raw.github.com/#{github_username}/#{github_repo}/#{github_branch}/scripts/vim.sh"
 
     # Provision Sublime
     config.vm.provision "shell", path: "https://raw.github.com/#{github_username}/#{github_repo}/#{github_branch}/scripts/subl.sh"
+
+
+    ################################################################################
+    # Plugins Config
+    ################################################################################
+    #
+    # Installed plugins
+    #   - vagrant-bundler    : https://github.com/mocoso/vagrant-bundler
+    #   - vagrant-cachier    : https://github.com/fgrehm/vagrant-cachier
+    #   - vagrant-mongodb    : https://github.com/smdahlen/vagrant-mongodb
+    #   - vagrant-mysql      : https://github.com/Logaritmisk/vagrant-mysql
+    #   - vagrant-node       : https://github.com/fjsanpedro/vagrant-node
+    #   - vagrant-proxy      : https://github.com/clintoncwolfe/vagrant-proxy
+    #   - vagrant-rake       : https://github.com/mitchellh/vagrant-rake
+    #   - vagrant-rsync      : https://github.com/cromulus/vagrant-rsync
+    #   - vagrant-vbguest    : https://github.com/dotless-de/vagrant-vbguest
+    #
+    ################################################################################
+
+    # Provision Plugins
+    config.vm.provision "shell", path: "https://raw.github.com/#{github_username}/#{github_repo}/#{github_branch}/scripts/plugins.sh"
+
+    # If using vagrant-cachier
+    if Vagrant.has_plugin?("vagrant-cachier")
+
+        config.cache.scope = :box
+
+        config.cache.synced_folder_opts = {
+            type: :nfs,
+            mount_options: ['rw', 'vers=3', 'tcp', 'nolock']
+        }
+
+    end
+
+    # If using vagrant-mongodb
+    if Vagrant.has_plugin?("vagrant-mongodb")
+
+        config.mongodb.auto_initiate = false
+
+        config.mongodb.replset :rs0 do |rs|
+          rs.ignore_private_ip = false
+          rs.member :server1, :priority => 1
+          rs.member :server2, :priority => 2
+          rs.member :server3, :priority => 1
+        end
+
+    end
+
+    # If using vagrant-rake
+    if Vagrant.has_plugin?("vagrant-rake")
+
+        config.rake.directory = "/my/custom/directory"
+
+    end
+
+    # If using vagrant-vbguest
+    if Vagrant.has_plugin?("vagrant-vbguest")
+
+        # we will try to autodetect this path.
+        # However, if we cannot or you have a special one you may pass it like:
+        # config.vbguest.iso_path = "#{ENV['HOME']}/Downloads/VBoxGuestAdditions.iso"
+        # or
+        # config.vbguest.iso_path = "http://company.server/VirtualBox/%{version}/VBoxGuestAdditions.iso"
+
+        # set auto_update to false, if you do NOT want to check the correct
+        # additions version when booting this machine
+        config.vbguest.auto_update = false
+
+        # do NOT download the iso file from a webserver
+        config.vbguest.no_remote = true
+
+    end
 
 
     ############################################################
