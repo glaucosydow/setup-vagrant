@@ -7,7 +7,7 @@ My personal configuration for Development Environment with Vagrant
 
 **Installation**
 
-1 - First of all, make sure you have [Vagrant](http://nodejs.org/) and [VirtualBox]() installed. <br/>
+1 - First of all, make sure you have [Vagrant](http://www.vagrantup.com/) and [VirtualBox](https://www.virtualbox.org/) installed. <br/>
 2 - Clone this repository and create your project folder
 
 ```bash
