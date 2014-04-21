@@ -15,7 +15,7 @@ git clone git://github.com/vitorbritto/setup-vagrant.git vagrant
 cd vagrant
 ```
 
-3 - Run the makefile with `vagrant up` <br/>
+3 - Run with `vagrant up` <br/>
 4 - Profit! :)
 
 **Usage**
