@@ -23,6 +23,7 @@ server_domain   = "vitorbritto.com"
 server_ip       = "192.168.0.1"
 server_memory   = "256" # MB
 server_timezone = "UTC"
+public_folder   = "/vagrant"
 
 # Database Configuration
 mysql_root_password   = "root"   # We'll assume user "root"
