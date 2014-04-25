@@ -12,12 +12,6 @@ github_repo     = "setup-vagrant"
 github_branch   = "master"
 
 # Server Configuration
-# Set a local private network IP address.
-# See http://en.wikipedia.org/wiki/Private_network for explanation
-# You can use the following IP ranges:
-#   10.0.0.1    - 10.255.255.254
-#   172.16.0.1  - 172.31.255.254
-#   192.168.0.1 - 192.168.255.254
 server_host     = "mybox"
 server_domain   = "vitorbritto.com"
 server_ip       = "192.168.0.1"
@@ -26,7 +20,7 @@ server_timezone = "UTC"
 public_folder   = "/vagrant"
 
 # Database Configuration
-mysql_root_password   = "root"   # We'll assume user "root"
+mysql_root_password   = "root"   # username
 mysql_version         = "5.5"    # Options: 5.5 | 5.6
 mysql_enable_remote   = "false"  # remote access enabled when true
 
