@@ -5,5 +5,6 @@
 # Author: Vitor Britto
 #
 # Description:
-# Setup VIM
+# Any local scripts you may want to run post-provisioning.
+# Add these to the same directory as the Vagrantfile.
 #
